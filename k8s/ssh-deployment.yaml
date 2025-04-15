@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vuln-ssh-deployment
+  namespace: vuln-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vuln-ssh
+  template:
+    metadata:
+      labels:
+        app: vuln-ssh
+    spec:
+      serviceAccountName: ssh-admin
+      containers:
+      - name: ssh-container
+        image: rastasheep/ubuntu-sshd:18.04
+        ports:
+        - containerPort: 22
+        securityContext:
+          privileged: true
+          capabilities:
+            add: ["SYS_ADMIN", "SYS_PTRACE", "NET_ADMIN"]
+          runAsUser: 0
+          allowPrivilegeEscalation: true
+        env:
+        - name: ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ssh-credentials
+              key: password
+        command: ["/bin/bash"]
+        args:
+        - "-c"
+        - |
+          echo "root:$ROOT_PASSWORD" | chpasswd && \
+          /usr/sbin/sshd -D
+      restartPolicy: Always

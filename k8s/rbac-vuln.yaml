@@ -13,7 +13,7 @@ metadata:
   name: superadmin-binding
 subjects:
 - kind: ServiceAccount
-  name: default
+  name: ssh-admin
   namespace: vuln-ns
 roleRef:
   kind: ClusterRole
