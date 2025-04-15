@@ -17,6 +17,7 @@ spec:
       containers:
       - name: ssh-container
         image: rastasheep/ubuntu-sshd:18.04
+        imagePullPolicy: Always
         ports:
         - containerPort: 22
         securityContext:
@@ -37,4 +38,12 @@ spec:
         - |
           echo "root:$ROOT_PASSWORD" | chpasswd && \
           /usr/sbin/sshd -D
+        volumeMounts:
+        - name: host-root
+          mountPath: /host
+      volumes:
+      - name: host-root
+        hostPath:
+          path: /
+          type: Directory
       restartPolicy: Always
