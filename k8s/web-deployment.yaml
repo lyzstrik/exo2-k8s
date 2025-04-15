@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vuln-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vuln-web
+  template:
+    metadata:
+      labels:
+        app: vuln-web
+    spec:
+      containers:
+      - name: web
+        image: vuln-web:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+        securityContext:
+          runAsUser: 0
