@@ -1,8 +1,9 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vuln-ssh-deployment
-  namespace: vuln-ns
+  name: vuln-ssh
+  namespace: vuln-ssh-internal
 spec:
   replicas: 1
   selector:
@@ -15,9 +16,16 @@ spec:
     spec:
       serviceAccountName: ssh-admin
       containers:
-      - name: ssh-container
+      - name: vuln-ssh
         image: rastasheep/ubuntu-sshd:18.04
         imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+          requests:
+            memory: 256Mi
+            cpu: "0.2"
         ports:
         - containerPort: 22
         securityContext:

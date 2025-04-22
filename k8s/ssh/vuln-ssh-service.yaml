@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: vuln-ssh-svc
-  namespace: vuln-ns
+  namespace: vuln-ssh-internal
 spec:
   selector:
     app: vuln-ssh

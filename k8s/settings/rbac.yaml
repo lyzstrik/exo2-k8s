@@ -1,3 +1,4 @@
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -7,6 +8,12 @@ rules:
   resources: ["*"]
   verbs: ["*"]
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ssh-admin
+  namespace: vuln-ssh-internal
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -14,7 +21,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: ssh-admin
-  namespace: vuln-ns
+  namespace: vuln-ssh-internal
 roleRef:
   kind: ClusterRole
   name: superadmin
