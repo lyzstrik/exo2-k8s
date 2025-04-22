@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vuln-web
+  namespace: vuln-web-external
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vuln-web
+  template:
+    metadata:
+      labels:
+        app: vuln-web
+    spec:
+      containers:
+      - name: web
+        image: vuln-web:latest
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+          requests:
+            memory: 256Mi
+            cpu: "0.2"
+        ports:
+        - containerPort: 5000
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        envFrom:
+        - configMapRef:
+            name: vuln-web-config

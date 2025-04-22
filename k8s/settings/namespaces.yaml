@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vuln-web-external
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vuln-ssh-internal

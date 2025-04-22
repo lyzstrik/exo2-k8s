@@ -1,0 +1,11 @@
+kubectl get svc -n vuln-web-external
+kubectl describe pod vuln-web-bb49b5496-t2dbd -n vuln-web-external
+kubectl get pods -A -o wide
+
+
+eval $(minikube docker-env)
+docker build -t vuln-web:latest .
+@FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env --shell cmd') DO @%i
+
+
+kubectl apply -R -f .

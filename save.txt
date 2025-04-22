@@ -1,0 +1,61 @@
+F:\Conteneur\exo2-k8s\k8s>kubectl apply -f settings/namespaces.yaml
+namespace/vuln-web-external created
+namespace/vuln-ssh-internal created
+
+F:\Conteneur\exo2-k8s\k8s>kubectl apply -f web/vuln-web-configmap.yaml
+configmap/vuln-web-config created
+ 
+F:\Conteneur\exo2-k8s\k8s>kubectl apply -f web/vuln-web-deployment.yaml
+deployment.apps/vuln-web created
+
+F:\Conteneur\exo2-k8s\k8s>kubectl apply -f web/vuln-web-service.yaml
+service/vuln-web created
+
+F:\Conteneur\exo2-k8s\k8s>kubectl get pods -n vuln-web-external
+NAME                       READY   STATUS    RESTARTS   AGE
+vuln-web-8b7fb79c6-4v6nt   1/1     Running   0          16s
+
+F:\Conteneur\exo2-k8s\k8s>minikube ip
+192.168.49.2
+
+
+
+F:\Conteneur\exo2-k8s\k8s>deployall.cmd
+namespace/vuln-web-external created
+namespace/vuln-ssh-internal created
+networkpolicy.networking.k8s.io/allow-web-to-ssh created
+clusterrole.rbac.authorization.k8s.io/superadmin created
+serviceaccount/ssh-admin created
+clusterrolebinding.rbac.authorization.k8s.io/superadmin-binding created
+persistentvolume/host-ssh-pv created
+persistentvolumeclaim/host-ssh-pvc created
+configmap/vuln-web-config created
+deployment.apps/vuln-web created
+service/vuln-web-svc created
+deployment.apps/vuln-ssh created
+secret/ssh-credentials created
+service/vuln-ssh-svc created
+
+F:\Conteneur\exo2-k8s\k8s>kubectl get pods -A
+NAMESPACE           NAME                               READY   STATUS    RESTARTS   AGE
+kube-system         coredns-668d6bf9bc-6qlmr           1/1     Running   0          2m38s
+kube-system         etcd-minikube                      1/1     Running   0          2m44s
+kube-system         kube-apiserver-minikube            1/1     Running   0          2m44s
+kube-system         kube-controller-manager-minikube   1/1     Running   0          2m45s
+kube-system         kube-proxy-nf2zg                   1/1     Running   0          2m38s
+kube-system         kube-scheduler-minikube            1/1     Running   0          2m44s
+kube-system         storage-provisioner                1/1     Running   0          2m41s
+vuln-ssh-internal   vuln-ssh-54c8bc87cc-6mx8t          1/1     Running   0          27s
+vuln-web-external   vuln-web-9bdf94cdb-rxlwt           1/1     Running   0          28s
+
+
+
+
+
+
+
+
+F:\Conteneur\exo2-k8s\k8s>kubectl run test-client-web --rm -it --restart=Never --image=busybox:1.28 -n vuln-web-external -- /bin/sh
+If you don't see a command prompt, try pressing enter.
+/ # nc -vz 10.244.0.4 22
+10.244.0.4 (10.244.0.4:22) open
